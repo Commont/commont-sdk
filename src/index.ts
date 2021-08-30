@@ -24,10 +24,14 @@ export interface FetchCommentsAPIPayload {
 }
 
 /** @internal */
-export interface FetchCommentsAPIResponse {
-  comments: Comment[];
-  count: number;
-}
+export type FetchCommentsAPIResponse =
+  | {
+      comments: Comment[];
+      count: number;
+    }
+  | {
+      error: string;
+    };
 
 /** @internal */
 export interface AddCommentAPIPayload {
@@ -38,9 +42,13 @@ export interface AddCommentAPIPayload {
 }
 
 /** @internal */
-export interface AddCommentAPIResponse {
-  comment: Comment;
-}
+export type AddCommentAPIResponse =
+  | {
+      comment: Comment;
+    }
+  | {
+      error: string;
+    };
 
 export interface CommontSdkConfig {
   /** @default false */
@@ -77,27 +85,28 @@ export function Commont<TConfig extends CommontSdkConfig>(
   return {
     addComment: async (topic, comment) => {
       const payload: AddCommentAPIPayload = { projectId, topic, ...comment };
-      const response = await fetch(
-        `https://www.commont.app/api/add-comment?projectId=${payload.projectId}`,
-        {
-          method: 'POST',
-          body: JSON.stringify(payload),
-          headers: {
-            'Content-Type': 'application/json',
-          },
+
+      try {
+        const response = await fetch(
+          `https://www.commont.app/api/add-comment?projectId=${payload.projectId}`,
+          {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        const responseJson: AddCommentAPIResponse = await response.json();
+        if ('error' in responseJson) {
+          return panic(responseJson.error, config);
         }
-      );
 
-      if (!response.ok) {
-        return panic(response.statusText, config);
-      }
-
-      const responseJson: AddCommentAPIResponse = await response.json();
-      if (response.ok && responseJson) {
         return responseJson.comment;
+      } catch (e) {
+        return panic(e.message, config);
       }
-
-      return panic('Empty API response', config);
     },
     getComments: async (topic, options) => {
       const payload: FetchCommentsAPIPayload = { projectId, topic, ...options };
@@ -109,24 +118,23 @@ export function Commont<TConfig extends CommontSdkConfig>(
       }).toString();
       const url = `https://www.commont.app/api/comments?${params}`;
 
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-      if (!response.ok) {
-        return panic(response.statusText, config);
-      }
+        const responseJson: FetchCommentsAPIResponse = await response.json();
+        if ('error' in responseJson) {
+          return panic(responseJson.error, config);
+        }
 
-      const responseJson: FetchCommentsAPIResponse = await response.json();
-
-      if (response.ok && responseJson) {
         return responseJson;
+      } catch (e) {
+        return panic(e.message, config);
       }
-
-      return panic('Empty API response', config);
     },
   };
 }

@@ -18,7 +18,7 @@ describe('Commont client', () => {
     const res1 = await commont.getComments('');
 
     expect(res1).toMatchObject({
-      error: 'Bad Request',
+      error: 'Missing required parameter',
     });
 
     expect(res1).not.toMatchObject({ count: /d+/ });
@@ -111,7 +111,7 @@ describe('Commont client', () => {
       author: 'me',
     });
     expect(res1).toMatchObject({
-      error: 'Bad Request',
+      error: 'Missing required parameter',
     });
   });
 });
@@ -137,7 +137,7 @@ describe('Commont client in a throwErrors mode', () => {
       expect(res1).not.toMatchObject({ comments: expect.anything() });
     } catch (err) {
       expect(err).toMatchObject({
-        error: 'Bad Request',
+        error: 'Missing required parameter',
       });
     }
   });
@@ -175,7 +175,7 @@ describe('Commont client in a throwErrors mode', () => {
       expect(res1).not.toMatchObject({ comments: expect.anything() });
     } catch (err) {
       expect(err).toMatchObject({
-        error: 'Bad Request',
+        error: 'Missing required parameter',
       });
     }
   });
@@ -188,7 +188,7 @@ describe('Commont client in a throwErrors mode', () => {
       });
     } catch (err) {
       expect(err).toMatchObject({
-        error: 'Bad Request',
+        error: 'Missing required parameter',
       });
     } finally {
       const res1 = await commont.getComments('/my-blogpost-3');
