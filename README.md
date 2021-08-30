@@ -1,6 +1,6 @@
 # @commont/sdk
 
-![npm](https://img.shields.io/npm/v/@commont-sdk)
+![npm](https://img.shields.io/npm/v/@commont/sdk)
 
 ## Getting set up
 
