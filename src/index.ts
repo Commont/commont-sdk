@@ -3,6 +3,7 @@ export interface Comment {
   content: string;
   topic: string;
   createdAt: string;
+  details?: Record<string, any>;
 }
 
 export class CommontSDKError extends Error {
@@ -39,6 +40,7 @@ export interface AddCommentAPIPayload {
   topic: string;
   content: string;
   author: string;
+  details?: Record<string, any>;
 }
 
 /** @internal */
@@ -79,7 +81,7 @@ export function Commont<TConfig extends CommontSdkConfig>(
   ) => Promise<GetCommentsResult | PossiblyCommontError<TConfig>>;
   addComment: (
     topic: string,
-    comment: Pick<Comment, 'content' | 'author'>
+    comment: Pick<Comment, 'content' | 'author' | 'details'>
   ) => Promise<Comment | PossiblyCommontError<TConfig>>;
 } {
   return {

@@ -18,6 +18,9 @@ const example = async () => {
   const res2 = await commont.addComment('/my-blogpost', {
     author: 'me',
     content: 'Hello world!',
+    details: {
+      key: 'value',
+    },
   });
 
   console.log(res2);

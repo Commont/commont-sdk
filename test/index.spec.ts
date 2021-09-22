@@ -114,6 +114,36 @@ describe('Commont client', () => {
       error: 'Missing required parameter',
     });
   });
+
+  it('handles details object', async () => {
+    const details = {
+      key: 'value',
+    };
+    const res1 = await commont.addComment('/my-blogpost-details', {
+      author: 'me',
+      content: 'hello',
+      details,
+    });
+    if ('topic' in res1) {
+      expect(res1).toMatchObject({
+        topic: '/my-blogpost-details',
+        author: 'me',
+        content: 'hello',
+        createdAt: expect.any(String),
+        details: expect.any(Object),
+      });
+    }
+
+    const res2 = await commont.getComments('/my-blogpost-details');
+
+    expect(res2).not.toMatchObject({ error: /w+/ });
+    if ('comments' in res2) {
+      expect(res2.count).toBe(1);
+      expect(JSON.stringify(res2.comments[0].details)).toBe(
+        JSON.stringify(details)
+      );
+    }
+  });
 });
 
 describe('Commont client in a throwErrors mode', () => {

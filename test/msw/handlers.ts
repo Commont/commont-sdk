@@ -70,7 +70,7 @@ export const handlers = [
   rest.post<AddCommentAPIPayload, AddCommentAPIResponse>(
     'https://www.commont.app/api/add-comment',
     (req, res, ctx) => {
-      const { author, content, topic } = req.body;
+      const { author, content, topic, details } = req.body;
 
       if (!author || !content) {
         return res(
@@ -84,6 +84,7 @@ export const handlers = [
         content,
         topic,
         createdAt: new Date().toString(),
+        details,
         hidden: false,
       };
 

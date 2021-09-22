@@ -51,6 +51,9 @@ console.log(res.comments, res.count);
 const newComment = await commont.addComment('/my-blogpost', {
   author: 'me',
   content: 'Hello world!',
+  details: {
+    optionalKey: 'optional value',
+  },
 });
 ```
 
@@ -82,6 +85,7 @@ export interface Comment {
   content: string;
   topic: string;
   createdAt: string;
+  details?: Record<string, any>;
 }
 ```
 
